@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production builds & exports
+dist/
+*/dist/
+build/
+*/build/
+.expo/
+*/.expo/
+
+# Environment files & secrets
+.env
+*/.env
+.env.local
+*/.env.local
+.env.*.local
+
+# Native builds & generated assets
+*.apk
+*.aab
+*.ipa
+.kotlin/
+.gradle/
+android/
+ios/
+
+# Logs & temp files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+.DS_Store
+.system_generated/
+*.png
+!customer-app/assets/**/*.png
+!mlt-app/assets/**/*.png
+!admin-app/assets/**/*.png
+!admin-dashboard/public/**/*.png
+mlt_screenshot.png

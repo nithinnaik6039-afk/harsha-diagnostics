@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harsha Diagnostics — Executive Presentation Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #070b14;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border-card: rgba(56, 189, 248, 0.15);
+      --primary: #0284c7;
+      --primary-light: #38bdf8;
+      --emerald: #10b981;
+      --emerald-light: #34d399;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 40%),
+        linear-gradient(180deg, #070b14 0%, #030712 100%);
+      color: var(--text-main);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Top Presentation Header */
+    header {
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 11, 20, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary-light), var(--emerald));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 16px rgba(2, 132, 199, 0.4);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(2, 132, 199, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--primary-light);
+    }
+
+    /* Slides Viewport */
+    main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 92%;
+      max-width: 1200px;
+      height: 85%;
+      max-height: 680px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      padding: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      transform: scale(0.96) translateY(20px);
+      pointer-events: none;
+      transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    /* Slide Typography & Layouts */
+    .slide-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--emerald-light);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 24px;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: grid;
+      align-items: stretch;
+      gap: 20px;
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .grid-4 {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(15, 23, 42, 0.85);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .highlight-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(2, 132, 199, 0.25);
+      border-radius: 6px;
+      color: var(--primary-light);
+      font-weight: 600;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    /* Title Slide Specifics */
+    .title-slide-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      gap: 20px;
+    }
+
+    .hero-heading {
+      font-family: 'Outfit', sans-serif;
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 50%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 20px;
+      color: var(--text-muted);
+      max-width: 800px;
+      line-height: 1.5;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 16px;
+    }
+
+    .stat-box {
+      border-left: 3px solid var(--primary-light);
+      padding-left: 14px;
+    }
+
+    .stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Architecture Flow Box */
+    .flow-chain {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .flow-step {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .flow-arrow {
+      color: var(--primary-light);
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    /* Bottom Navigation Bar */
+    footer {
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 11, 20, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #0369a1);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      box-shadow: 0 0 16px rgba(2, 132, 199, 0.4);
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .progress-bar-container {
+      flex: 1;
+      max-width: 300px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 20px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-light), var(--emerald-light));
+      width: 9%;
+      transition: width 0.3s ease;
+    }
+
+    /* Speaker Notes Modal */
+    .notes-drawer {
+      position: fixed;
+      bottom: 74px;
+      right: 32px;
+      width: 440px;
+      background: #0f172a;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      z-index: 100;
+      display: none;
+    }
+
+    .notes-drawer.open {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .notes-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--primary-light);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notes-body {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Print Styles for Direct Export to PDF */
+    @media print {
+      body {
+        height: auto;
+        overflow: visible;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      header, footer, .notes-drawer {
+        display: none !important;
+      }
+      main {
+        display: block;
+        padding: 0;
+      }
+      .slide {
+        position: relative !important;
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: auto !important;
+        page-break-after: always;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        border: none !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        padding: 30px !important;
+      }
+      .slide-title, .hero-heading, .card-title {
+        color: #0f172a !important;
+        -webkit-text-fill-color: initial !important;
+      }
+      .card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #334155 !important;
+      }
+      .card-desc, .hero-sub, .slide-tag {
+        color: #475569 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🩸</div>
+      <div>
+        <div class="brand-title">HARSHA DIAGNOSTICS</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="badge">NABL Certified Platform</span>
+      <span class="badge" style="border-color: rgba(16, 185, 129, 0.4); color: var(--emerald-light); background: rgba(16, 185, 129, 0.15);">3 Standalone Apps</span>
+    </div>
+  </header>
+
+  <!-- Presentation Main Slides Viewport -->
+  <main>
+
+    <!-- Slide 1: Title -->
+    <div class="slide active" id="slide-1" data-notes="Welcome everyone. Today we are presenting Harsha Diagnostics — an integrated digital health ecosystem that transforms traditional diagnostic lab visits into a seamless, on-demand doorstep service with real-time GPS tracking and clinical cold-chain verification.">
+      <div class="title-slide-container">
+        <div>
+          <div class="slide-tag">Executive Presentation Deck • 2026</div>
+          <h1 class="hero-heading">HARSHA DIAGNOSTICS</h1>
+          <p class="hero-sub">Next-Generation Hyper-Local Diagnostics & Certified Home Sample Collection Platform</p>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-box">
+            <div class="stat-num">&lt; 60 Sec</div>
+            <div class="stat-label">Doorstep Booking</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">2°C – 8°C</div>
+            <div class="stat-label">Cold-Chain Guard</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">3 Apps</div>
+            <div class="stat-label">Unified Monorepo</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">NABL 112</div>
+            <div class="stat-label">Quality Certified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide" id="slide-2" data-notes="Fasting blood draws require patients to travel early in the morning without food. Samples transported without strict temperature controls lead to pre-analytical errors and repeated punctures. Harsha Diagnostics solves these core friction points with automation.">
+      <div>
+        <div class="slide-tag">01 / Industry Challenges</div>
+        <h2 class="slide-title">The Friction in Modern Diagnostic Care</h2>
+      </div>
+
+      <div class="slide-content grid-3">
+        <div class="card">
+          <div class="card-icon">🏥</div>
+          <div class="card-title">Patient Travel & Queues</div>
+          <div class="card-desc">Fasting patients, pregnant women, and senior citizens must endure long travel times and clinical exposure in crowded morning waiting rooms.</div>
+          <span class="highlight-pill">High Patient Friction</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🌡️</div>
+          <div class="card-title">Cold-Chain Integrity Loss</div>
+          <div class="card-desc">Standard courier transit lacks continuous thermal tracking, causing protein degradation and erroneous hemolysis test values.</div>
+          <span class="highlight-pill">Pre-Analytical Risk</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🗺️</div>
+          <div class="card-title">Zero Real-Time Tracking</div>
+          <div class="card-desc">Patients and lab administrators have no live visibility into phlebotomist arrival times, leading to missed appointments and scheduling chaos.</div>
+          <span class="highlight-pill">Operational Blindspots</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Unified Ecosystem Solution -->
+    <div class="slide" id="slide-3" data-notes="Rather than a generic monolithic app, we built three purpose-tailored applications that communicate in real-time via WebSocket and REST APIs.">
+      <div>
+        <div class="slide-tag">02 / Integrated Platform</div>
+        <h2 class="slide-title">Three Specialized Applications • One Ecosystem</h2>
+      </div>
+
+      <div class="slide-content grid-3">
+        <div class="card" style="border-color: rgba(2, 132, 199, 0.4);">
+          <div class="card-icon">📱</div>
+          <div class="card-title">1. Customer Mobile App</div>
+          <div class="card-desc">Doorstep test booking, bilingual Telugu/English support, prescription OCR, live phlebotomist radar, and smart visual report viewer.</div>
+          <span class="highlight-pill">iOS & Android APK</span>
+        </div>
+
+        <div class="card" style="border-color: rgba(16, 185, 129, 0.4);">
+          <div class="card-icon">🩺</div>
+          <div class="card-title">2. MLT Phlebotomist App</div>
+          <div class="card-desc">Instant dispatch HUD, cold-chain temperature monitor, digital consent signature pad, tube color guide, and AI vein scanner.</div>
+          <span class="highlight-pill">iOS & Android APK</span>
+        </div>
+
+        <div class="card" style="border-color: rgba(244, 63, 94, 0.4);">
+          <div class="card-icon">👑</div>
+          <div class="card-title">3. Admin Command Center</div>
+          <div class="card-desc">Live city fleet GPS map, Kanban order dispatch board, test catalog & dynamic pricing manager, and financial KPI analytics.</div>
+          <span class="highlight-pill">Web & Android Shell</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: System Architecture -->
+    <div class="slide" id="slide-4" data-notes="Our stack is built for high concurrency. Express 5 and Socket.io manage high-frequency GPS telemetry, while MongoDB 2dsphere indexes optimize spatial dispatch within milliseconds.">
+      <div>
+        <div class="slide-tag">03 / Engineering Architecture</div>
+        <h2 class="slide-title">High-Performance Real-Time Telemetry Pipeline</h2>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-3" style="margin-bottom: 12px;">
+          <div class="card">
+            <div class="card-title">⚙️ Backend Core</div>
+            <div class="card-desc">Node.js ES Modules + Express 5 REST API, JWT authentication, and automatic offline mock fallback.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">📡 Live Socket.io Bus</div>
+            <div class="card-desc">Sub-second bidirectional location broadcasting between moving MLT vehicles and patient tracking screens.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">🗄️ MongoDB Geolocation</div>
+            <div class="card-desc">9 Mongoose Schemas with 2dsphere geospatial indexing for hyper-local technician routing.</div>
+          </div>
+        </div>
+
+        <div class="flow-chain">
+          <div class="flow-step">1. Patient Books Test</div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step">2. AI Proximity Dispatch</div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step">3. MLT Navigates with GPS</div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step">4. Cold-Chain Blood Collection</div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-step">5. Smart Report on Phone</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Customer App Deep Dive -->
+    <div class="slide" id="slide-5" data-notes="The customer app is built to maximize accessibility. It features full bilingual support in Telugu and English, and translates complex medical report numbers into easy-to-understand color-coded graphs.">
+      <div>
+        <div class="slide-tag">04 / Customer Experience</div>
+        <h2 class="slide-title">Customer App: Frictionless Doorstep Diagnostic Care</h2>
+      </div>
+
+      <div class="slide-content grid-4">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Telugu & English</div>
+          <div class="card-desc">1-tap native language localization covering all symptoms, test instructions, and fasting guidelines.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📸</div>
+          <div class="card-title">Prescription OCR</div>
+          <div class="card-desc">Camera scan doctor prescriptions with client-side OCR parsing to populate cart automatically.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗺️</div>
+          <div class="card-title">Live Phlebotomist Radar</div>
+          <div class="card-desc">Interactive live map tracking technician travel with real-time arrival estimates and milestones.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Smart Health Indicators</div>
+          <div class="card-desc">Visual color-coded report charts (Normal, Borderline, Risk) with 1-tap WhatsApp sharing to doctors.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: MLT Phlebotomist App Deep Dive -->
+    <div class="slide" id="slide-6" data-notes="Our MLT app is a complete clinical workstation in the technician's pocket. It eliminates pre-analytical errors through tube color guides, cold-chain alarms, and vein contrast filters.">
+      <div>
+        <div class="slide-tag">05 / Field Operations</div>
+        <h2 class="slide-title">MLT App: Clinical Precision & Field Safety Workstation</h2>
+      </div>
+
+      <div class="slide-content grid-4">
+        <div class="card">
+          <div class="card-icon">🔔</div>
+          <div class="card-title">Instant Dispatch HUD</div>
+          <div class="card-desc">Full-screen 30-second audio-visual order alerts with distance and required tube counts.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧪</div>
+          <div class="card-title">Tube Order of Draw</div>
+          <div class="card-desc">Visual clinical guide for EDTA (Purple), SST (Yellow), Fluoride (Grey), and Citrate (Blue).</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">❄️</div>
+          <div class="card-title">Cold-Chain Monitor</div>
+          <div class="card-desc">Continuous temperature logging with automated alerts if specimen box exceeds 8°C.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">✍️</div>
+          <div class="card-title">Digital Signature Pad</div>
+          <div class="card-desc">Patient consent capture, barcode tube binding, and biohazard waste disposal verification.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Admin Command Center -->
+    <div class="slide" id="slide-7" data-notes="The Admin Dashboard gives lab leadership 360-degree control over orders, active field agents, revenue KPIs, and dynamic test pricing.">
+      <div>
+        <div class="slide-tag">06 / Central Supervision</div>
+        <h2 class="slide-title">Admin Command Center: Real-Time Fleet & Revenue Radar</h2>
+      </div>
+
+      <div class="slide-content grid-3">
+        <div class="card">
+          <div class="card-icon">📡</div>
+          <div class="card-title">Live Fleet Radar Map</div>
+          <div class="card-desc">Interactive city-wide map showing active phlebotomists, route states (Idle, En Route, Sampling), and delivery zones.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📋</div>
+          <div class="card-title">Kanban Dispatch Board</div>
+          <div class="card-desc">Real-time status board: Pending ➔ Assigned ➔ En Route ➔ Sample Collected ➔ In Lab ➔ Report Ready.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <div class="card-title">Revenue & KPI Analytics</div>
+          <div class="card-desc">Gross booking volume, COD vs Online breakdown, test popularity metrics, and peak hour distributions.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Clinical Innovation & AI -->
+    <div class="slide" id="slide-8" data-notes="We leverage AI not as a buzzword, but for clinical risk mitigation: calculating specimen thermal degradation, alerting on critical panic values, and enhancing difficult vein visualization.">
+      <div>
+        <div class="slide-tag">07 / Clinical Innovation</div>
+        <h2 class="slide-title">AI-Powered Safety & Pre-Analytical Quality Control</h2>
+      </div>
+
+      <div class="slide-content grid-3">
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">Thermal Degradation AI</div>
+          <div class="card-desc">Calculates biological sample half-life degradation based on ambient Indian summer temperatures and transit delays.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚨</div>
+          <div class="card-title">Critical Panic Value Alert</div>
+          <div class="card-desc">Automatic trigger on severe out-of-range lab findings (e.g. Potassium &gt; 6.0 mEq/L) notifying treating doctors immediately.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">👁️</div>
+          <div class="card-title">Vein Scanner Camera HUD</div>
+          <div class="card-desc">High-contrast visual filter assisting in quick vein location for pediatric and elderly patients with difficult access.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Standalone Android APK Pipeline -->
+    <div class="slide" id="slide-9" data-notes="All 3 applications are compiled into standalone APKs using Expo Application Services cloud runners. Users can download and install them directly onto Android phones without app store delays.">
+      <div>
+        <div class="slide-tag">08 / Build & Deployment</div>
+        <h2 class="slide-title">Standalone Android APK Generation Pipeline</h2>
+      </div>
+
+      <div class="slide-content grid-3">
+        <div class="card">
+          <div class="card-icon">☁️</div>
+          <div class="card-title">EAS Cloud Compilation</div>
+          <div class="card-desc">Zero local Android Studio required. Expo Cloud compiles and signs standalone `.apk` binary files directly.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">3 Separate APK Packages</div>
+          <div class="card-desc">
+            • <code>customer-app.apk</code><br />
+            • <code>mlt-app.apk</code><br />
+            • <code>admin-app.apk</code>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📲</div>
+          <div class="card-title">Direct QR & URL Downloads</div>
+          <div class="card-desc">Scan terminal QR code with Android phone to download and sideload the APK onto mobile devices instantly.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Roadmap & Vision -->
+    <div class="slide" id="slide-10" data-notes="Our roadmap focuses on hospital EHR/LIS integration, longitudinal health trend scoring, and expanding certified home collection coverage.">
+      <div>
+        <div class="slide-tag">09 / Future Growth</div>
+        <h2 class="slide-title">Strategic Roadmap & Technology Evolution</h2>
+      </div>
+
+      <div class="slide-content grid-3">
+        <div class="card">
+          <div class="card-title">🚀 Phase 1 (Completed)</div>
+          <div class="card-desc">Monorepo architecture, 3 standalone mobile & web apps, real-time GPS dispatch, and EAS APK pipeline.</div>
+          <span class="highlight-pill" style="color: var(--emerald-light); background: rgba(16, 185, 129, 0.2);">Live & Production Ready</span>
+        </div>
+        <div class="card">
+          <div class="card-title">🏥 Phase 2 (Q4 2026)</div>
+          <div class="card-desc">HL7 / FHIR bidirectional integrations with major hospital Laboratory Information Systems (LIS/HIS).</div>
+          <span class="highlight-pill">EHR Integration</span>
+        </div>
+        <div class="card">
+          <div class="card-title">📈 Phase 3 (2027)</div>
+          <div class="card-desc">Predictive health scoring and longitudinal AI trend analytics across multiple annual checkups.</div>
+          <span class="highlight-pill">Preventive AI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: Conclusion & Q&A -->
+    <div class="slide" id="slide-11" data-notes="Thank you for your time. We are now ready to demonstrate the live applications across Customer, MLT, and Admin interfaces.">
+      <div class="title-slide-container" style="text-align: center; align-items: center;">
+        <div class="brand-icon" style="width: 64px; height: 64px; font-size: 32px; margin-bottom: 12px;">🩸</div>
+        <h1 class="hero-heading" style="font-size: 48px;">Transforming Doorstep Diagnostic Care</h1>
+        <p class="hero-sub" style="text-align: center;">Faster • Certified • Reliable • Connected</p>
+        <div style="margin-top: 24px; display: flex; gap: 16px;">
+          <button class="btn btn-primary" onclick="restartDeck()">🔁 Start From Beginning</button>
+          <button class="btn" onclick="window.print()">🖨️ Export PDF Handout</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Navigation Bar -->
+  <footer>
+    <div class="nav-controls">
+      <button class="btn" onclick="prevSlide()" id="prevBtn">← Previous</button>
+      <button class="btn btn-primary" onclick="nextSlide()" id="nextBtn">Next →</button>
+      <button class="btn" onclick="toggleNotes()">📝 Speaker Notes</button>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="slide-counter" id="slideCounter">Slide 1 / 11</div>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+      <button class="btn" onclick="window.print()">🖨️ Print / PDF</button>
+    </div>
+  </footer>
+
+  <!-- Speaker Notes Drawer -->
+  <div class="notes-drawer" id="notesDrawer">
+    <div class="notes-title">
+      <span>SPEAKER TALKING POINTS</span>
+      <span style="cursor: pointer;" onclick="toggleNotes()">✕</span>
+    </div>
+    <div class="notes-body" id="notesContent">
+      Welcome to the presentation.
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 11;
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      document.querySelectorAll('.slide').forEach((slide, i) => {
+        slide.classList.toggle('active', i + 1 === currentSlide);
+      });
+
+      document.getElementById('slideCounter').textContent = `Slide ${currentSlide} / ${totalSlides}`;
+      document.getElementById('progressBar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').textContent = currentSlide === totalSlides ? 'Finish 🏁' : 'Next →';
+
+      // Update speaker notes
+      const activeSlideEl = document.getElementById(`slide-${currentSlide}`);
+      const notes = activeSlideEl.getAttribute('data-notes') || 'No speaker notes for this slide.';
+      document.getElementById('notesContent').textContent = notes;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    function restartDeck() {
+      showSlide(1);
+    }
+
+    function toggleNotes() {
+      const drawer = document.getElementById('notesDrawer');
+      drawer.classList.toggle('open');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      } else if (e.key === 'n' || e.key === 'N') {
+        toggleNotes();
+      } else if (e.key === 'Home') {
+        showSlide(1);
+      } else if (e.key === 'End') {
+        showSlide(totalSlides);
+      }
+    });
+
+    // Touch Swipe Gesture support for mobile/tablets
+    let touchStartX = 0;
+    window.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    window.addEventListener('touchend', e => {
+      let diff = e.changedTouches[0].screenX - touchStartX;
+      if (diff < -50) nextSlide();
+      if (diff > 50) prevSlide();
+    });
+
+    // Initialize
+    showSlide(1);
+  </script>
+</body>
+</html>

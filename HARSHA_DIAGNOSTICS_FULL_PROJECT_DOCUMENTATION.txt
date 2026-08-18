@@ -1,0 +1,344 @@
+================================================================================
+           HARSHA DIAGNOSTICS — COMPREHENSIVE PROJECT DOCUMENTATION
+     End-to-End Home Sample Collection & NABL Certified Diagnostics Platform
+================================================================================
+Document Version : 2.0.0
+Author           : Harsha Diagnostics Engineering Team
+Date             : August 2026
+Architecture     : Monorepo (Node.js REST API + Socket.io + React Admin + 2 React Native Expo Mobile Apps)
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+1. EXECUTIVE SUMMARY & BUSINESS MODEL
+2. SYSTEM ARCHITECTURE & TECH STACK
+3. BACKEND API & REAL-TIME WEBSOCKET SYSTEM
+4. DATABASE DESIGN & DATA MODELS
+5. APPLICATION 1: CUSTOMER MOBILE APP (IOS & ANDROID)
+6. APPLICATION 2: MLT (PHLEBOTOMIST) MOBILE APP (IOS & ANDROID)
+7. APPLICATION 3: ADMIN COMMAND CENTER DASHBOARD (WEB & ANDROID APK)
+8. ADVANCED CLINICAL & AI MODULES
+9. SECURITY, PRIVACY & COMPLIANCE (NABL / HIPAA)
+10. PRODUCTION DEPLOYMENT & ENVIRONMENT CONFIGURATION
+11. STANDALONE ANDROID APK BUILD & DISTRIBUTION GUIDE
+12. COMPLETE REST API ENDPOINT REFERENCE
+
+================================================================================
+1. EXECUTIVE SUMMARY & BUSINESS MODEL
+================================================================================
+Harsha Diagnostics is an on-demand, hyper-local diagnostic laboratory ecosystem
+designed to provide certified diagnostic testing directly at patient doorsteps.
+
+Key Value Propositions:
+- Patients can book diagnostic blood, urine, and pathology tests in under 60 seconds.
+- AI-powered dispatch algorithm assigns nearby Certified Medical Laboratory
+  Technicians (MLTs) / Phlebotomists based on geo-proximity and inventory availability.
+- Real-time GPS tracking allows patients to track the arrival of phlebotomists on a live map.
+- Cold-chain monitoring ensures sample vials are maintained within clinical temperature
+  thresholds (2°C - 8°C) from collection to laboratory handover.
+- Automated report delivery directly to the customer app with visual Smart Health
+  Indicator charts (Normal, Borderline, Critical).
+- Multi-lingual user interface with native Telugu and English support for maximum
+  accessibility across urban and rural demographics.
+
+================================================================================
+2. SYSTEM ARCHITECTURE & TECH STACK
+================================================================================
+The platform follows a unified modular architecture:
+
+A. BACKEND SERVICES
+   - Runtime          : Node.js (ES Modules)
+   - Web Framework    : Express 5.x
+   - Database         : MongoDB with Mongoose 9.x ODM
+   - Real-Time Layer  : Socket.io 4.x for bidirectional location & dispatch broadcasting
+   - Payment Gateway  : Razorpay SDK (Order creation, HMAC-SHA256 signature verification)
+   - Push System      : Expo Server SDK for APNs & FCM mobile push notifications
+   - Authentication   : JWT (JSON Web Tokens) with 30-day persistence + OTP Verification
+
+B. CLIENT APPLICATIONS
+   1. Customer App:
+      - Framework     : Expo SDK (React Native 0.86), Expo Router (File-based Routing)
+      - State Manager : Zustand
+      - UI & Maps     : React Native Reanimated, Leaflet/Mapbox native bridge, Glassmorphism
+   2. MLT Phlebotomist App:
+      - Framework     : Expo SDK (React Native 0.86), Expo Router
+      - State Manager : Zustand
+      - Sensors       : Geolocation GPS, Camera (Vein HUD & Barcode OCR), Audio Recorder
+   3. Admin Command Center:
+      - Framework     : React 19 + Vite 8
+      - Styling       : Tailwind CSS
+      - Visualization : Chart.js + React-Chartjs-2
+      - Real-Time     : Socket.io-client for live fleet radar & incoming orders board
+
+================================================================================
+3. BACKEND API & REAL-TIME WEBSOCKET SYSTEM
+================================================================================
+The backend server (`server.js`) operates on port 5005 (configurable) and coordinates:
+- RESTful HTTP APIs for authentication, test catalog, booking, payments, and certificates.
+- Socket.io room-based messaging for live telemetry:
+  - `join-room`: Subscribes clients to specific order rooms (e.g. `order_<id>`).
+  - `update-location`: MLT mobile app emits GPS coords (`lat`, `lng`, `mltId`, `orderId`).
+  - `location-broadcast`: Broadcasts current phlebotomist position to the tracking customer.
+- Resilient Graceful Mock Fallback: In development/offline environments without MongoDB,
+  the server automatically boots in mock mode so interfaces remain interactive.
+
+================================================================================
+4. DATABASE DESIGN & DATA MODELS
+================================================================================
+The database consists of 9 core schemas:
+
+1. User Schema (`User.js`):
+   - Fields: `name`, `email`, `phone` (unique index), `role` ('customer' | 'admin'),
+     `addresses` (array of labeled addresses with lat/lng), `pushToken`, `avatarUrl`,
+     `medicalHistory` (allergies, diabetic, chronic conditions).
+
+2. MLT (Phlebotomist) Schema (`MLT.js`):
+   - Fields: `name`, `phone`, `email`, `rating` (default 4.8), `totalCollections`,
+     `isOnline` (boolean), `location` (GeoJSON Point: [lng, lat] with 2dsphere index),
+     `kycStatus` ('pending' | 'verified' | 'rejected'), `vehicleNumber`, `vaccinationStatus`.
+
+3. Test Schema (`Test.js`):
+   - Fields: `name`, `code`, `category` ('Sugar'|'Thyroid'|'Lipid'|'Liver'|'Infection'|'Vitamins'|'Bundles'),
+     `price`, `discountPrice`, `fastingRequired` (boolean), `sampleType` ('Blood'|'Serum'|'Plasma'|'Urine'),
+     `tatHours` (Turnaround time), `tubeType` ('Lavender EDTA'|'Red Plain'|'Grey Fluoride'|'Yellow SST'),
+     `description_en`, `description_te`.
+
+4. Order Schema (`Order.js`):
+   - Fields: `orderId` (e.g., HD-2026-XXXX), `customer` (User ref), `patientDetails` (name, age, gender),
+     `address` (street, city, lat, lng, pincode), `slot` (date, timeSlot),
+     `tests` (array of Test refs), `totalAmount`, `paymentStatus` ('pending'|'paid'|'failed'|'cash_on_collection'),
+     `paymentMethod` ('razorpay'|'cod'|'upi'), `orderStatus` ('pending'|'assigned'|'en_route'|'arrived'|'sample_collected'|'in_lab'|'completed'|'cancelled'),
+     `assignedMLT` (MLT ref), `vialBarcodes` (array of strings), `temperatureLog` (array of readings),
+     `reportUrl`, `digitalSignature`, `rating`.
+
+5. Certificate Schema (`Certificate.js`):
+   - Fields: `certificateName`, `issuingBody` (NABL / ISO / ICMR), `licenseNumber`,
+     `validUntil`, `verificationUrl`, `documentUrl`.
+
+6. Partner Schema (`Partner.js`):
+   - Fields: `clinicName`, `doctorName`, `referralCode`, `commissionRate`, `payoutPhone`.
+
+7. ServiceZone Schema (`ServiceZone.js`):
+   - Fields: `zoneName`, `polygon` (GeoJSON Polygon), `isActive`, `baseDeliveryFee`.
+
+8. DelayEvent Schema (`DelayEvent.js`):
+   - Fields: `orderId`, `reason` (Traffic, Weather, Patient Delay), `delayMinutes`, `reportedAt`.
+
+9. ChatbotFAQ Schema (`ChatbotFAQ.js`):
+   - Fields: `query_pattern`, `response_en`, `response_te`, `category`.
+
+================================================================================
+5. APPLICATION 1: CUSTOMER MOBILE APP
+================================================================================
+Target Audience: Patients, Families, Senior Citizens
+Path: `customer-app/`
+Package: `com.harshadiagnostics.customer`
+
+Key Features & Screens:
+1. Multi-Language Switcher (English / Telugu):
+   - Full localized interface across all catalog items, symptoms, preparation notes.
+2. Home & Test Explorer (`index.tsx`, `explore.tsx`):
+   - Filter by disease category (Diabetes, Heart, Kidney, Thyroid, Full Body Bundles).
+   - Fasting requirement tags (e.g., "10-12 Hrs Fasting Required").
+   - Search bar with instant fuzzy filtering.
+3. AI Health Intelligence Hub & Risk Assessment (`AIHealthIntelligenceHub.tsx`):
+   - Interactive questionnaire assessing risk for Diabetes, Hypertension, and Lipid disorders.
+   - Recommends tailored test panels based on reported symptoms.
+4. Smart Prescription Upload with OCR (`PrescriptionUploadOCR.tsx`):
+   - Take photo or upload doctor prescription.
+   - Client-side text parsing suggests matching laboratory tests for instant cart checkout.
+5. Cart & Smart Checkout (`cart.tsx`):
+   - Add multiple family members as patients for a single visit.
+   - Schedule home visit date and morning slot (6:00 AM - 11:00 AM).
+   - Select payment mode: Razorpay (Cards, UPI, Netbanking) or Cash/UPI on collection.
+6. Live GPS Phlebotomist Radar Tracking (`track/[id].tsx`, `LiveMap.tsx`):
+   - Real-time map displaying the assigned phlebotomist moving toward patient doorstep.
+   - Milestone progress tracker: Order Confirmed -> Phlebotomist Assigned -> On The Way -> Sample Collected -> In Lab Processing -> Report Generated.
+7. Smart Lab Report Viewer (`SmartLabReportViewer.tsx`):
+   - Color-coded graphical ranges: Normal (Green), Borderline (Yellow), High Risk (Red).
+   - Direct PDF download and 1-tap WhatsApp sharing to family doctor.
+8. Interactive Bilingual Medical Chatbot (`ChatbotWidget.tsx`):
+   - Instant answers on test preparation, report delivery times, and price inquiries.
+
+================================================================================
+6. APPLICATION 2: MLT PHLEBOTOMIST APP
+================================================================================
+Target Audience: Certified Phlebotomists, Field Lab Technicians
+Path: `mlt-app/`
+Package: `com.harshadiagnostics.mlt`
+
+Key Features & Operational Modules:
+1. Shift Management & Duty Toggle (`index.tsx`):
+   - 1-tap "Go Online / Offline" toggle.
+   - Background GPS location broadcaster to backend dispatch radar.
+2. Instant Incoming Dispatch Alert (`incoming-alert.tsx`):
+   - Full-screen audio-visual modal when a new home sample collection is assigned.
+   - Displays patient distance, test count, payment mode, and accept/decline action within 30s.
+3. Multi-Stop Route Optimizer (`MultiStopRouteOptimizer.tsx`):
+   - Sequences all daily appointments using shortest-path TSP algorithms.
+4. Tube Collection & Color Guide (`TubeCollectionGuide.tsx`):
+   - Visual reference of vacutainer tube caps:
+     * Lavender EDTA : Complete Blood Count (CBC), HbA1c
+     * Red / Yellow SST: Liver Function, Lipid Profile, Thyroid, Hormones
+     * Grey Fluoride: Fasting Blood Sugar, Oral Glucose
+     * Blue Citrate: Coagulation, PT/INR
+5. Cold-Chain Temperature Monitor (`ColdChainMonitor.tsx`):
+   - Continuous sample temperature tracking. Alerts technician if cooler exceeds 8°C.
+6. Thermal Degradation AI (`ThermalDegradationAI.tsx`):
+   - Estimates biological sample degradation risk based on elapsed time and ambient temperature.
+7. Vein Scanner HUD (`VeinScannerHUD.tsx`):
+   - Camera-assisted high-contrast color filter overlay to assist in difficult pediatric and geriatric vein location.
+8. Digital Signature & Consent Pad (`DigitalSignaturePad.tsx`):
+   - Collects patient digital touch signature before phlebotomy puncture.
+9. Barcode & Tube QR Scanner (`OrderQRCode.tsx`, `ChainOfCustodyAudit.tsx`):
+   - Scans barcode sticker placed on each vial to bind sample tube ID with patient order.
+10. Biohazard Waste Audit (`BiohazardWasteAudit.tsx`):
+    - Compliance checklist for sharps container disposal and yellow biohazard bag sealing.
+11. Emergency SOS Modal (`EmergencySOSModal.tsx`):
+    - Instant 1-tap distress signal broadcasting coordinates to Admin dispatch center.
+12. Offline Sync Engine (`OfflineSyncBanner.tsx`):
+    - Complete local SQLite/AsyncStorage queuing for rural areas with zero cellular connectivity.
+
+================================================================================
+7. APPLICATION 3: ADMIN COMMAND CENTER DASHBOARD
+================================================================================
+Target Audience: Laboratory Owners, Operations Managers, Pathologists
+Path: `admin-dashboard/` (Vite Web App) & `admin-app/` (Android APK Mobile Shell)
+Package: `com.harshadiagnostics.admin`
+
+Key Management Consoles:
+1. Live Fleet Radar (`LiveTracking.jsx`):
+   - Interactive Mapbox/Leaflet radar displaying all active phlebotomists across the city.
+   - Color-coded markers: Green (Idle/Available), Blue (En Route to Patient), Orange (Sampling).
+2. Live Orders Board (`Orders.jsx`):
+   - Real-time Kanban board with instant drag/status update:
+     [Pending] -> [Assigned] -> [En Route] -> [Sample Collected] -> [In Lab] -> [Completed].
+   - Filter by date, zone, and urgency.
+3. Test & Package Catalog Manager (`Catalog.jsx`):
+   - Add, edit, disable laboratory tests and promotional health checkup bundles.
+   - Configure dynamic pricing, fasting rules, sample tube requirements, and Telugu translations.
+4. Staff Roster & KYC Approvals (`Roster.jsx`):
+   - Review MLT government ID, medical council certification, and vehicle documents.
+   - Monitor daily collection counts, customer rating scores, and attendance.
+5. Revenue Analytics & KPI Dashboard (`Analytics.jsx`):
+   - Financial breakdown: Daily Gross Volume, Average Order Value, COD vs Online split.
+   - Most booked tests bar charts, peak booking hour histograms.
+6. NABL Accreditation & Lab Profile (`Profile.jsx`):
+   - Manage lab license metadata, ISO certificates, and pathologist digital signatures.
+7. Pro Multi-Theme Customizer:
+   - 3 Curated high-contrast clinical themes: Midnight Dark, Ocean Blue, and Mint Emerald.
+
+================================================================================
+8. ADVANCED CLINICAL & AI MODULES
+================================================================================
+1. Optical Character Recognition (OCR) Engine:
+   - Parses handwritten and printed doctor prescriptions to automatically extract test names.
+2. AI Pre-Analytical Error Prevention:
+   - Detects hemolyzed, lipemic, or insufficient volume warnings prior to laboratory submission.
+3. Critical Panic Value Alert System:
+   - Automatically detects severe out-of-range lab results (e.g. Potassium > 6.0 mEq/L, Platelets < 20,000)
+     and sends high-priority SMS/push notifications to treating physicians.
+4. Smart Thermal Degradation Calculator:
+   - Algorithm calculates biological sample half-life degradation based on ambient Indian summer temperatures.
+
+================================================================================
+9. SECURITY, PRIVACY & COMPLIANCE
+================================================================================
+1. Patient Data Encryption:
+   - HTTPS / TLS 1.3 enforced for all client-server communications.
+   - Medical reports and sensitive health indicators encrypted at rest.
+2. Phone Number Masking (`PatientCommunicationMask.tsx`):
+   - Phlebotomists call patients via masked virtual numbers to protect patient phone numbers.
+3. Role-Based Access Control (RBAC):
+   - JWT middleware strictly limits access based on user roles (`customer`, `mlt`, `admin`).
+4. NABL / ISO Guidelines Compliance:
+   - Strict adherence to NABL 112 (Specific Criteria for Accreditation of Medical Laboratories).
+   - Biomedical Waste Management Rules, 2016 barcoded tracking.
+
+================================================================================
+10. PRODUCTION DEPLOYMENT & ENVIRONMENT CONFIGURATION
+================================================================================
+Environment Variables Reference:
+
+A. Backend (`server.js`):
+   PORT=5005
+   MONGO_URI=mongodb://localhost:27017/harsha-diagnostics
+   JWT_SECRET=your_super_secret_jwt_key
+   RAZORPAY_KEY_ID=rzp_live_xxxxxxxx
+   RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxx
+
+B. Customer App (`customer-app/.env`):
+   EXPO_PUBLIC_BACKEND_URL=https://your-backend-api.up.railway.app
+
+C. MLT App (`mlt-app/.env`):
+   EXPO_PUBLIC_BACKEND_URL=https://your-backend-api.up.railway.app
+
+D. Admin App (`admin-app/.env`):
+   EXPO_PUBLIC_ADMIN_URL=https://your-admin-dashboard.vercel.app
+
+Recommended Cloud Providers:
+- Backend & MongoDB : Railway.app / Render.com
+- Admin Dashboard   : Vercel / Netlify
+- Mobile APK Builds : Expo Application Services (EAS Build Cloud)
+
+================================================================================
+11. STANDALONE ANDROID APK BUILD & DISTRIBUTION GUIDE
+================================================================================
+All 3 applications are pre-configured for standalone `.apk` compilation:
+
+Step 1: One-time login to Expo EAS:
+   npx -y eas-cli login
+
+Step 2: Generate APK for Customer App:
+   cd "/Users/palthiyanithinnaik/HARSHA-DIAGNOSTIC CENTRE_/customer-app"
+   npx -y eas-cli build --platform android --profile preview
+
+Step 3: Generate APK for MLT Phlebotomist App:
+   cd "/Users/palthiyanithinnaik/HARSHA-DIAGNOSTIC CENTRE_/mlt-app"
+   npx -y eas-cli build --platform android --profile preview
+
+Step 4: Generate APK for Admin App:
+   cd "/Users/palthiyanithinnaik/HARSHA-DIAGNOSTIC CENTRE_/admin-app"
+   npx -y eas-cli build --platform android --profile preview
+
+Or run the interactive root script:
+   ./build-apks.sh
+
+Output:
+When the build finishes, EAS provides:
+- Direct Download Link: (e.g. `https://expo.dev/artifacts/eas/...apk`)
+- Terminal QR Code: Scan with Android phone camera to download directly.
+
+================================================================================
+12. COMPLETE REST API ENDPOINT REFERENCE
+================================================================================
+AUTH ENDPOINTS (`/api/auth`):
+- POST /api/auth/send-otp          : Send 6-digit OTP to mobile phone
+- POST /api/auth/verify-otp        : Verify OTP and return JWT token
+- POST /api/auth/register          : Register new customer or MLT
+- POST /api/auth/firebase-google   : Google OAuth SSO sign-in
+- GET  /api/auth/profile           : Fetch logged-in user profile [Bearer Token]
+- PATCH /api/auth/push-token       : Register Expo push notification token
+
+TEST ENDPOINTS (`/api/tests`):
+- GET  /api/tests                  : List all diagnostic tests and categories
+- POST /api/tests                  : Create new test [Admin only]
+- PUT  /api/tests/:id              : Update test details & pricing [Admin only]
+- DELETE /api/tests/:id            : Archive test [Admin only]
+
+ORDER ENDPOINTS (`/api/orders`):
+- GET  /api/orders                 : Fetch user orders or all orders for Admin/MLT
+- GET  /api/orders/:id             : Fetch single order details and milestone log
+- POST /api/orders                 : Create new diagnostic home collection order
+- PATCH /api/orders/:id/status     : Transition order status (Assigned, In-Lab, etc.)
+- PATCH /api/orders/:id/assign     : Assign phlebotomist to order [Admin/Auto-dispatch]
+- PATCH /api/orders/:id/decline    : Decline dispatch assignment [MLT only]
+
+PAYMENT ENDPOINTS (`/api/payments`):
+- POST /api/payments/create-order  : Create Razorpay transaction order
+- POST /api/payments/verify        : Verify HMAC-SHA256 Razorpay payment signature
+- POST /api/payments/confirm-direct: Confirm Cash-on-Collection / Direct payment
+
+================================================================================
+                    END OF SPECIFICATION & DOCUMENTATION
+================================================================================

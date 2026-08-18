@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Harsha Admin",
+    "slug": "admin-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "harshaadmin",
+    "userInterfaceStyle": "dark",
+    "platforms": ["android", "ios", "web"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.harshadiagnostics.admin"
+    },
+    "android": {
+      "package": "com.harshadiagnostics.admin",
+      "adaptiveIcon": {
+        "backgroundColor": "#090D16",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#090D16",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 100
+        }
+      ]
+    ]
+  }
+}

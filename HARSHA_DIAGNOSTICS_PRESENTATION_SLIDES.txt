@@ -1,0 +1,173 @@
+================================================================================
+          HARSHA DIAGNOSTICS — EXECUTIVE PRESENTATION SLIDE DECK
+      On-Demand Home Sample Collection & NABL Certified Lab Platform
+================================================================================
+
+--------------------------------------------------------------------------------
+SLIDE 1: TITLE & VISION
+--------------------------------------------------------------------------------
+[TITLE]
+HARSHA DIAGNOSTICS
+Next-Generation Hyper-Local Diagnostics & Home Sample Collection Platform
+
+[SUBTITLE]
+Bridging NABL-Accredited Laboratories, Smart Mobile Dispatch, and Patient Doorsteps
+
+[PRESENTER]
+Harsha Diagnostics Engineering & Leadership Team
+
+[TALKING POINTS / SPEAKER NOTES]
+- Welcome everyone. Today we are presenting Harsha Diagnostics — an integrated digital health ecosystem that transforms traditional diagnostic lab visits into a seamless, on-demand doorstep service.
+- The platform connects patients, phlebotomists, and central labs in real-time.
+
+--------------------------------------------------------------------------------
+SLIDE 2: THE PROBLEM STATEMENT
+--------------------------------------------------------------------------------
+[TITLE]
+The Friction in Modern Diagnostic Testing
+
+[KEY CHALLENGES]
+1. Patient Inconvenience:
+   - Long waiting times and traffic queues in crowded diagnostic centers during early fasting hours.
+   - High risk of infection exposure for senior citizens, pediatric patients, and pregnant women.
+2. Field Phlebotomy Blindspots:
+   - Zero real-time visibility into phlebotomist location, arrival estimates, or sample condition.
+   - Biological sample degradation due to improper cold-chain maintenance during transit.
+3. Administrative Overheads:
+   - Manual phone dispatch, lost paper prescriptions, and delayed report delivery.
+
+[TALKING POINTS / SPEAKER NOTES]
+- Fasting blood draws require patients to travel early in the morning without food.
+- Samples transported without strict temperature controls lead to pre-analytical errors and repeated punctures.
+- Harsha Diagnostics solves these core friction points with automation and clinical-grade mobile workflows.
+
+--------------------------------------------------------------------------------
+SLIDE 3: THE UNIFIED 3-APP SOLUTION
+--------------------------------------------------------------------------------
+[TITLE]
+Three Specialized Applications. One Synchronized Platform.
+
+[ECOSYSTEM PILLARS]
+1. 🏥 Customer Mobile App (Android / iOS):
+   - 60-second test booking, AI symptom analyzer, live GPS phlebotomist tracking, Telugu/English localization, and smart visual reports.
+2. 🩺 MLT Phlebotomist Mobile App (Android / iOS):
+   - Instant dispatch alerts, multi-stop route optimizer, cold-chain temperature monitor, digital consent signatures, and tube barcode scanner.
+3. 👑 Admin Command Center (Web / Android APK):
+   - Real-time city fleet radar, live Kanban order board, catalog & dynamic pricing manager, MLT KYC roster, and revenue analytics.
+
+[TALKING POINTS / SPEAKER NOTES]
+- Rather than a generic monolithic app, we built three purpose-tailored applications that communicate in real-time via WebSocket and REST APIs.
+
+--------------------------------------------------------------------------------
+SLIDE 4: SYSTEM ARCHITECTURE & DATA FLOW
+--------------------------------------------------------------------------------
+[TITLE]
+High-Performance Real-Time Architecture
+
+[ARCHITECTURE COMPONENTS]
+- Client Layer     : 2 Expo React Native Apps + 1 React 19 / Vite Admin Dashboard.
+- API Gateway      : Node.js / Express 5 REST API with JWT Auth & Role-Based Access.
+- Live Telemetry   : Socket.io bidirectional event bus for continuous GPS broadcasting.
+- Database Layer   : MongoDB with 9 Mongoose Schemas & Geospatial 2dsphere indexing.
+- Cloud & Payments : Razorpay Payment Gateway, Expo Push Notification Server, NABL Cloud Vault.
+
+[DATA PIPELINE]
+1. Patient books test -> 2. Proximity-based MLT auto-dispatch -> 3. Phlebotomist navigates with GPS -> 4. Barcoded sample collected with cold-chain lock -> 5. Lab processes vial -> 6. Smart Report delivered to patient app.
+
+--------------------------------------------------------------------------------
+SLIDE 5: CUSTOMER MOBILE APP HIGHLIGHTS
+--------------------------------------------------------------------------------
+[TITLE]
+Customer App: Frictionless Healthcare at Doorsteps
+
+[STANDOUT CAPABILITIES]
+- Bilingual Support: Seamless 1-tap switching between Telugu (తెలుగు) and English.
+- AI Health Intelligence Hub: Symptom checker recommending tailored diagnostic packages.
+- Prescription Upload OCR: Instant camera scanning of handwritten doctor prescriptions.
+- Live Arrival Radar: Patients watch their phlebotomist travel to their home in real-time.
+- Smart Lab Report Viewer: Replaces complex PDF tables with clear green/yellow/red health ranges.
+- Dual Payment Flexibility: Online UPI/Cards via Razorpay or Cash/UPI on sample collection.
+
+--------------------------------------------------------------------------------
+SLIDE 6: MLT (PHLEBOTOMIST) APP HIGHLIGHTS
+--------------------------------------------------------------------------------
+[TITLE]
+MLT App: Empowering Field Technicians with Clinical Precision
+
+[OPERATIONAL TOOLS]
+- Instant Dispatch HUD: 30-second audio-visual modal with patient distance and test count.
+- Order of Draw & Tube Color Guide: Visual protocols for EDTA, Fluoride, Citrate, SST tubes.
+- Cold-Chain Monitor: Live temperature logging ensuring samples stay between 2°C - 8°C.
+- Vein Scanner HUD: High-contrast camera filter assisting in difficult vein location.
+- Digital Consent Pad: Captures patient touch signature before phlebotomy puncture.
+- Thermal Degradation AI: Estimates sample half-life degradation based on ambient temperature.
+- Offline Sync Engine: Operates seamlessly in basement apartments and rural offline zones.
+
+--------------------------------------------------------------------------------
+SLIDE 7: ADMIN COMMAND CENTER HIGHLIGHTS
+--------------------------------------------------------------------------------
+[TITLE]
+Admin Command Center: Real-Time Laboratory Supervision
+
+[EXECUTIVE TOOLS]
+- Fleet Live Radar Map: Live GPS positions of all technicians across the city.
+- Kanban Order Board: Instant drag-and-drop order status transitions.
+- Test Catalog & Dynamic Pricing: Manage tests, bundles, fasting guidelines, and translations.
+- Phlebotomist Roster & KYC: Verify medical council licenses, background checks, and ratings.
+- Financial & Operational Analytics: Revenue charts, peak booking hours, and COD reconciliation.
+- Multi-Theme Customizer: Midnight Dark, Ocean Blue, and Mint Emerald themes.
+
+--------------------------------------------------------------------------------
+SLIDE 8: CLINICAL QUALITY & NABL COMPLIANCE
+--------------------------------------------------------------------------------
+[TITLE]
+Clinical Safety, Quality Assurance & Data Privacy
+
+[SAFETY STANDARDS]
+- NABL 112 Compliance: Full traceability of sample collection from puncture to report.
+- Barcode Chain of Custody: Eliminates sample mix-ups through 1-to-1 vial QR binding.
+- Biomedical Waste Audit: Strict sharps container and biohazard bag verification protocols.
+- Phone Number Masking: Phlebotomists contact patients via virtual numbers to safeguard patient privacy.
+- End-to-End Encryption: TLS 1.3 encryption for all patient health records and telemetry data.
+
+--------------------------------------------------------------------------------
+SLIDE 9: ANDROID APK GENERATION & DISTRIBUTION
+--------------------------------------------------------------------------------
+[TITLE]
+Standalone Android APK Generation Pipeline
+
+[BUILD ARCHITECTURE]
+- Cloud Compilation: Expo Application Services (EAS Build) compiles standalone `.apk` files without needing local Android Studio.
+- Separate Independent APKs:
+  1. `customer-app.apk` (com.harshadiagnostics.customer)
+  2. `mlt-app.apk` (com.harshadiagnostics.mlt)
+  3. `admin-app.apk` (com.harshadiagnostics.admin)
+- 1-Click Interactive CLI: `./build-apks.sh` automates the entire generation process.
+- Direct Distribution: QR code & URL download links for instant sideloading on Android devices.
+- Instant WebAPK: 1-tap Chrome installation directly onto mobile home screens.
+
+--------------------------------------------------------------------------------
+SLIDE 10: ROADMAP & FUTURE VISION
+--------------------------------------------------------------------------------
+[TITLE]
+Future Roadmap & Scaling Strategy
+
+[KEY MILESTONES]
+- Phase 1 (Completed): Monorepo build, real-time dispatch, 3 standalone apps, and APK pipeline.
+- Phase 2 (Q4 2026): Integration with hospital HIS/LIS systems via HL7 / FHIR APIs.
+- Phase 3 (2027): AI-driven preventive health trends and longitudinal health scoring.
+- Phase 4 (2027): Drone-based urgent blood sample transit for remote rural healthcare centers.
+
+--------------------------------------------------------------------------------
+SLIDE 11: CONCLUSION & LIVE DEMO
+--------------------------------------------------------------------------------
+[TITLE]
+Harsha Diagnostics — Transforming Doorstep Healthcare
+
+[SUMMARY]
+- Faster, certified, patient-centric diagnostic testing at your fingertips.
+- Ready for full production deployment and app store release.
+
+[Q&A & LIVE DEMONSTRATION]
+Thank you! Questions and live app walk-through.
+================================================================================
