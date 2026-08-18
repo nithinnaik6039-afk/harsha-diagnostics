@@ -4,7 +4,7 @@ import axios from 'axios';
 import { auth, isFirebaseConfigured } from '../utils/firebase';
 import AuthTabs from '../components/AuthTabs';
 
-const BACKEND_URL = typeof window !== 'undefined' && window.location?.hostname ? `http://${window.location.hostname}:5005` : 'http://localhost:5005';
+import { BACKEND_URL } from '../constants/api';
 
 export default function Login() {
   const setAuth = useAuthStore((state) => state.setAuth);

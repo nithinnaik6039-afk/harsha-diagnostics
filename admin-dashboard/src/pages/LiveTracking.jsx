@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
-
-const BACKEND_URL =
-  typeof window !== 'undefined' && window.location?.hostname
-    ? `http://${window.location.hostname}:5005`
-    : 'http://localhost:5005';
+import { BACKEND_URL } from '../constants/api';
 
 export default function LiveTracking() {
   const token = useAuthStore((s) => s.token);

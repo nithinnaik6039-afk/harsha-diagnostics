@@ -21,7 +21,7 @@ ChartJS.register(
   BarElement, ArcElement, Title, Tooltip, Legend, Filler
 );
 
-const BACKEND_URL = typeof window !== 'undefined' && window.location?.hostname ? `http://${window.location.hostname}:5005` : 'http://localhost:5005';
+import { BACKEND_URL } from '../constants/api';
 const PERIOD_OPTIONS = ['Week', 'Month', 'Year'];
 
 function isSameDay(d1, d2) {

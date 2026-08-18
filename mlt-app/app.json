@@ -7,7 +7,11 @@
     "icon": "./assets/images/icon.png",
     "scheme": "mltapp",
     "userInterfaceStyle": "automatic",
-    "platforms": ["android", "ios", "web"],
+    "platforms": [
+      "android",
+      "ios",
+      "web"
+    ],
     "ios": {
       "icon": "./assets/expo.icon",
       "bundleIdentifier": "com.harshadiagnostics.mlt"
@@ -41,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e4bd3a1e-6d30-498e-9cb4-06560de86ae7"
+      }
     }
   }
 }
