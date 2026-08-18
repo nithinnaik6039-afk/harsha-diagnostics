@@ -13,7 +13,7 @@ import {
 import { WebView } from 'react-native-webview';
 
 const DEFAULT_ADMIN_URL =
-  process.env.EXPO_PUBLIC_ADMIN_URL || 'http://192.168.0.158:5173';
+  process.env.EXPO_PUBLIC_ADMIN_URL || 'https://harsha-diagnostics-admin.vercel.app';
 
 export default function App() {
   const webViewRef = useRef(null);

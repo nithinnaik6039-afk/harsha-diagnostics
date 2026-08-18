@@ -1,15 +1,31 @@
 import { create } from 'zustand';
+import axios from 'axios';
 
 export const useAuthStore = create((set) => ({
-  token: localStorage.getItem('admin_token') || null,
+  token: typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null,
   
   setAuth: (token) => {
-    localStorage.setItem('admin_token', token);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('admin_token', token);
+    }
     set({ token });
   },
   
   logout: () => {
-    localStorage.removeItem('admin_token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('admin_token');
+    }
     set({ token: null });
   }
 }));
+
+// Global Axios response interceptor to handle expired sessions
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().logout();
+    }
+    return Promise.reject(error);
+  }
+);

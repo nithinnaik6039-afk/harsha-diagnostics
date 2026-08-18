@@ -124,12 +124,12 @@ export default function Analytics() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   // KPIs
-  const totalRevenue = orders.filter(o => o.payment.status === 'Paid').reduce((s, o) => s + o.payment.amount, 0);
-  const completedOrders = orders.filter(o => o.status === 'ReportReady').length;
+  const totalRevenue = orders.filter(o => o?.payment?.status === 'Paid').reduce((s, o) => s + (o?.payment?.amount || 0), 0);
+  const completedOrders = orders.filter(o => o?.status === 'ReportReady').length;
   const avgOrderValue = completedOrders > 0 ? Math.round(totalRevenue / completedOrders) : 0;
   const mltPerformanceMap = {};
   orders.forEach(o => {
-    if (o.assignedMLT && o.status === 'ReportReady') {
+    if (o?.assignedMLT && o?.status === 'ReportReady') {
       const name = o.assignedMLT.name || String(o.assignedMLT);
       mltPerformanceMap[name] = (mltPerformanceMap[name] || 0) + 1;
     }
@@ -138,9 +138,9 @@ export default function Analytics() {
 
   // Time helpers
   const getOrdersForDay = (day) =>
-    orders.filter(o => isSameDay(new Date(o.createdAt || o.slot?.date || Date.now()), day));
+    orders.filter(o => isSameDay(new Date(o?.createdAt || o?.slot?.date || Date.now()), day));
   const getRevenueForDay = (day) =>
-    getOrdersForDay(day).filter(o => o.payment.status === 'Paid').reduce((s, o) => s + o.payment.amount, 0);
+    getOrdersForDay(day).filter(o => o?.payment?.status === 'Paid').reduce((s, o) => s + (o?.payment?.amount || 0), 0);
 
   // Revenue chart
   let revenueLabels = [], revenueCurrentData = [], revenuePrevData = [];
@@ -168,15 +168,15 @@ export default function Analytics() {
     revenueLabels = months.map(formatMonth);
     revenueCurrentData = months.map(m =>
       orders.filter(o => {
-        const od = new Date(o.createdAt || o.slot?.date || Date.now());
-        return od.getMonth() === m.getMonth() && od.getFullYear() === m.getFullYear() && o.payment.status === 'Paid';
-      }).reduce((s, o) => s + o.payment.amount, 0)
+        const od = new Date(o?.createdAt || o?.slot?.date || Date.now());
+        return od.getMonth() === m.getMonth() && od.getFullYear() === m.getFullYear() && o?.payment?.status === 'Paid';
+      }).reduce((s, o) => s + (o?.payment?.amount || 0), 0)
     );
     revenuePrevData = prevMonths.map(m =>
       orders.filter(o => {
-        const od = new Date(o.createdAt || o.slot?.date || Date.now());
-        return od.getMonth() === m.getMonth() && od.getFullYear() === m.getFullYear() && o.payment.status === 'Paid';
-      }).reduce((s, o) => s + o.payment.amount, 0)
+        const od = new Date(o?.createdAt || o?.slot?.date || Date.now());
+        return od.getMonth() === m.getMonth() && od.getFullYear() === m.getFullYear() && o?.payment?.status === 'Paid';
+      }).reduce((s, o) => s + (o?.payment?.amount || 0), 0)
     );
   }
 

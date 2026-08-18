@@ -130,8 +130,9 @@ export const getOrderDetails = async (req, res) => {
     }
 
     // Authorization: User must be either the Customer who made the booking, the assigned MLT, or an Admin
-    const isCustomer = order.customer._id.toString() === req.user.id;
-    const isAssignedMLT = order.assignedMLT && order.assignedMLT._id.toString() === req.user.id;
+    const customerIdStr = order.customer ? (order.customer._id ? order.customer._id.toString() : order.customer.toString()) : null;
+    const isCustomer = customerIdStr === req.user.id;
+    const isAssignedMLT = order.assignedMLT && (order.assignedMLT._id ? order.assignedMLT._id.toString() : order.assignedMLT.toString()) === req.user.id;
     const isAdmin = req.user.role === 'admin';
 
     if (!isCustomer && !isAssignedMLT && !isAdmin) {
@@ -148,13 +149,24 @@ export const getOrderDetails = async (req, res) => {
 };
 
 /**
- * Get all past bookings for the logged-in customer
+ * Get bookings for the logged-in user (Customer personal, MLT assigned, or Admin all)
  * GET /api/orders
  */
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ customer: req.user.id })
-      .populate('tests', 'name price category')
+    let query = {};
+    if (req.user.role === 'customer') {
+      query = { customer: req.user.id };
+    } else if (req.user.role === 'mlt') {
+      query = { $or: [{ assignedMLT: req.user.id }, { status: 'Booked' }] };
+    } else if (req.user.role === 'admin') {
+      query = {}; // Admin retrieves all orders
+    }
+
+    const orders = await Order.find(query)
+      .populate('customer', 'name phone email')
+      .populate('assignedMLT', 'name phone rating photoUrl')
+      .populate('tests', 'name price category sampleType')
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -304,7 +316,8 @@ export const declineOrder = async (req, res) => {
     }
 
     // Add MLT to declined list
-    if (!order.declinedMLTs.includes(mltId)) {
+    const currentDeclined = (order.declinedMLTs || []).map(id => id.toString());
+    if (!currentDeclined.includes(mltId.toString())) {
       order.declinedMLTs.push(mltId);
       await order.save();
     }
@@ -339,8 +352,9 @@ export const attemptDispatch = async (orderId, io) => {
     const onlineMlts = await MLT.find({ isOnline: true });
     
     // Filter out MLTs that have declined this order
+    const declinedIds = (order.declinedMLTs || []).map(id => id.toString());
     const eligibleMlts = onlineMlts.filter(mlt => {
-      return !order.declinedMLTs.includes(mlt._id);
+      return !declinedIds.includes(mlt._id.toString());
     });
 
     if (eligibleMlts.length === 0) {
@@ -393,7 +407,6 @@ export const attemptDispatch = async (orderId, io) => {
       );
     }
 
-
     // Start 45-second timeout
     setTimeout(async () => {
       try {
@@ -402,7 +415,8 @@ export const attemptDispatch = async (orderId, io) => {
         if (checkOrder && checkOrder.status === 'Booked' && !checkOrder.assignedMLT) {
           console.log(`[Dispatcher] Order ${orderId} timed out for MLT ${targetMlt.name}. Re-routing...`);
           
-          if (!checkOrder.declinedMLTs.includes(targetMlt._id)) {
+          const currentTimeoutDeclined = (checkOrder.declinedMLTs || []).map(id => id.toString());
+          if (!currentTimeoutDeclined.includes(targetMlt._id.toString())) {
             checkOrder.declinedMLTs.push(targetMlt._id);
             await checkOrder.save();
           }

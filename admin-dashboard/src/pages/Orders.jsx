@@ -51,22 +51,23 @@ export default function Orders() {
   };
 
   // Math helpers
-  const activeBookings = orders.filter((o) => !['ReportReady', 'Cancelled'].includes(o.status));
-  const completedCount = orders.filter((o) => o.status === 'ReportReady').length;
+  const activeBookings = orders.filter((o) => !['ReportReady', 'Cancelled'].includes(o?.status));
+  const completedCount = orders.filter((o) => o?.status === 'ReportReady').length;
   const paidRevenue = orders
-    .filter((o) => o.payment.status === 'Paid')
-    .reduce((sum, o) => sum + o.payment.amount, 0);
+    .filter((o) => o?.payment?.status === 'Paid')
+    .reduce((sum, o) => sum + (o?.payment?.amount || 0), 0);
   const pendingRevenue = orders
-    .filter((o) => o.payment.status === 'Pending' && o.status !== 'Cancelled')
-    .reduce((sum, o) => sum + o.payment.amount, 0);
+    .filter((o) => o?.payment?.status === 'Pending' && o?.status !== 'Cancelled')
+    .reduce((sum, o) => sum + (o?.payment?.amount || 0), 0);
 
   const filteredOrders = orders.filter((o) => {
+    if (!o) return false;
     if (filter === 'All') return true;
-    if (filter === 'Active') return !['ReportReady', 'Cancelled'].includes(o.status);
-    if (filter === 'Completed') return o.status === 'ReportReady';
-    if (filter === 'Cancelled') return o.status === 'Cancelled';
-    if (filter === 'Paid') return o.payment.status === 'Paid';
-    if (filter === 'Pending Payment') return o.payment.status === 'Pending' && o.status !== 'Cancelled';
+    if (filter === 'Active') return !['ReportReady', 'Cancelled'].includes(o?.status);
+    if (filter === 'Completed') return o?.status === 'ReportReady';
+    if (filter === 'Cancelled') return o?.status === 'Cancelled';
+    if (filter === 'Paid') return o?.payment?.status === 'Paid';
+    if (filter === 'Pending Payment') return o?.payment?.status === 'Pending' && o?.status !== 'Cancelled';
     return true;
   });
 

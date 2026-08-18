@@ -145,11 +145,17 @@ export default function CartScreen() {
 
     setLoading(true);
     try {
-      // STEP 1: Create the booking record
+      const parsedAge = parseInt(patientAge);
+      const safeAge = isNaN(parsedAge) || parsedAge <= 0 ? 28 : parsedAge;
+      const parsedLat = parseFloat(lat);
+      const safeLat = isNaN(parsedLat) ? 14.6819 : parsedLat;
+      const parsedLng = parseFloat(lng);
+      const safeLng = isNaN(parsedLng) ? 77.6006 : parsedLng;
+
       const payload = {
-        patient: { name: patientName, age: parseInt(patientAge), gender: patientGender },
+        patient: { name: patientName || 'Patient', age: safeAge, gender: patientGender || 'Male' },
         tests: cart.map((item) => item._id),
-        address: { addressLine, coordinates: { lat: parseFloat(lat), lng: parseFloat(lng) } },
+        address: { addressLine, coordinates: { lat: safeLat, lng: safeLng } },
         slot: { date: slotDate, time: slotTime },
         paymentMethod
       };
