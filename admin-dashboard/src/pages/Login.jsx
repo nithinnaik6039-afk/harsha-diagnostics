@@ -40,7 +40,11 @@ export default function Login() {
         setAuth(res.data.token);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Verify credentials.');
+      if (err.message === 'Network Error') {
+        setError('Connecting to cloud server... If it was asleep, please click Sign In again in a few seconds!');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Login failed. Verify credentials.');
+      }
     } finally {
       setLoading(false);
     }
