@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createSmartModel } from './smartModel.js';
 
 const testSchema = new mongoose.Schema({
   name: {
@@ -39,5 +40,7 @@ const testSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Test = mongoose.model('Test', testSchema);
+const TestMongoose = mongoose.models.Test || mongoose.model('Test', testSchema);
+const Test = createSmartModel('Test', TestMongoose, 'tests');
+
 export default Test;

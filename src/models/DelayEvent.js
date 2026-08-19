@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createSmartModel } from './smartModel.js';
 
 const delayEventSchema = new mongoose.Schema({
   order: {
@@ -23,5 +24,7 @@ const delayEventSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const DelayEvent = mongoose.model('DelayEvent', delayEventSchema);
+const DelayEventMongoose = mongoose.models.DelayEvent || mongoose.model('DelayEvent', delayEventSchema);
+const DelayEvent = createSmartModel('DelayEvent', DelayEventMongoose, 'delayEvents');
+
 export default DelayEvent;

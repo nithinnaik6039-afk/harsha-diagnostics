@@ -1,12 +1,28 @@
 /**
  * Centralized API Backend URL Configuration
- * Prioritizes:
- * 1. EXPO_PUBLIC_BACKEND_URL from environment / cloud build (.env or EAS secret)
- * 2. Browser window location (if running on web)
- * 3. Fallback LAN IP for real Android APK devices on local WiFi
+ * - Localhost / Local LAN IP: points to local backend on port 5005
+ * - Vercel / Cloud Domain: points to live production backend on Render
+ * - Native Android APK / iOS: uses EXPO_PUBLIC_BACKEND_URL or Render fallback
  */
-export const BACKEND_URL =
-  process.env.EXPO_PUBLIC_BACKEND_URL ||
-  (typeof window !== 'undefined' && (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1')
-    ? `http://${window.location.hostname}:5005`
-    : 'https://harsha-diagnostics.onrender.com');
+const getBackendUrl = () => {
+  if (typeof window !== 'undefined' && window.location?.hostname) {
+    const host = window.location.hostname;
+    const isLocal =
+      host === 'localhost' ||
+      host === '127.0.0.1' ||
+      host.startsWith('192.168.') ||
+      host.startsWith('10.') ||
+      host.startsWith('172.');
+
+    if (isLocal) {
+      return `http://${host}:5005`;
+    }
+  }
+
+  return (
+    process.env.EXPO_PUBLIC_BACKEND_URL ||
+    'https://harsha-diagnostics.onrender.com'
+  );
+};
+
+export const BACKEND_URL = getBackendUrl();

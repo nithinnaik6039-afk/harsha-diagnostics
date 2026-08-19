@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createSmartModel } from './smartModel.js';
 
 const chatbotFAQSchema = new mongoose.Schema({
   question_en: {
@@ -33,5 +34,7 @@ const chatbotFAQSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const ChatbotFAQ = mongoose.model('ChatbotFAQ', chatbotFAQSchema);
+const ChatbotFAQMongoose = mongoose.models.ChatbotFAQ || mongoose.model('ChatbotFAQ', chatbotFAQSchema);
+const ChatbotFAQ = createSmartModel('ChatbotFAQ', ChatbotFAQMongoose, 'chatbotFaqs');
+
 export default ChatbotFAQ;

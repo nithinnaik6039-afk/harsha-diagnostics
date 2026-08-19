@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import crypto from 'crypto';
+import { createSmartModel } from './smartModel.js';
 
 const orderSchema = new mongoose.Schema({
   customer: {
@@ -32,7 +33,6 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MLT'
   },
-  // New assignment for Delivery Partner
   assignedPartnerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Partner'
@@ -51,8 +51,8 @@ const orderSchema = new mongoose.Schema({
     status: { type: String, enum: ['Pending', 'Paid', 'Refunded'], default: 'Pending' },
     amount: { type: Number, required: true },
     transactionId: { type: String },
-    razorpayOrderId: { type: String },     // Razorpay Order ID (order_xxx)
-    razorpayPaymentId: { type: String }    // Razorpay Payment ID (pay_xxx) after success
+    razorpayOrderId: { type: String },
+    razorpayPaymentId: { type: String }
   },
   safetyPin: {
     type: String,
@@ -84,7 +84,7 @@ const orderSchema = new mongoose.Schema({
 
 // Pre-save hook to push initial status to timeline if timeline is empty
 orderSchema.pre('save', function() {
-  if (this.statusTimeline.length === 0) {
+  if (this.statusTimeline && this.statusTimeline.length === 0) {
     this.statusTimeline.push({
       status: this.status,
       timestamp: new Date()
@@ -92,5 +92,7 @@ orderSchema.pre('save', function() {
   }
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const OrderMongoose = mongoose.models.Order || mongoose.model('Order', orderSchema);
+const Order = createSmartModel('Order', OrderMongoose, 'orders');
+
 export default Order;

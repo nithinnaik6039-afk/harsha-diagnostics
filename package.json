@@ -14,7 +14,8 @@
     "build:apk:customer": "cd customer-app && npx -y eas-cli build --platform android --profile preview",
     "build:apk:mlt": "cd mlt-app && npx -y eas-cli build --platform android --profile preview",
     "build:apk:admin": "cd admin-app && npx -y eas-cli build --platform android --profile preview",
-    "kill-ports": "npx kill-port 5005 5173 8081 8082 8083"
+    "kill-ports": "npx kill-port 5005 5173 8081 8082 8083",
+    "test": "node test-mock-direct.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

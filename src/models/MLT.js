@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createSmartModel } from './smartModel.js';
 
 const mltSchema = new mongoose.Schema({
   name: {
@@ -23,6 +24,10 @@ const mltSchema = new mongoose.Schema({
   isOnline: {
     type: Boolean,
     default: false
+  },
+  location: {
+    type: { type: String, enum: ['Point'], default: 'Point' },
+    coordinates: { type: [Number], default: [77.6006, 14.6819] } // [lng, lat]
   },
   liveLocation: {
     lat: { type: Number },
@@ -54,5 +59,7 @@ const mltSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const MLT = mongoose.model('MLT', mltSchema);
+const MLTMongoose = mongoose.models.MLT || mongoose.model('MLT', mltSchema);
+const MLT = createSmartModel('MLT', MLTMongoose, 'mlts');
+
 export default MLT;

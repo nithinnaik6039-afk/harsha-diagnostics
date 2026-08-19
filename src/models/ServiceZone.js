@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createSmartModel } from './smartModel.js';
 
 const serviceZoneSchema = new mongoose.Schema({
   name: {
@@ -32,5 +33,7 @@ const serviceZoneSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const ServiceZone = mongoose.model('ServiceZone', serviceZoneSchema);
+const ServiceZoneMongoose = mongoose.models.ServiceZone || mongoose.model('ServiceZone', serviceZoneSchema);
+const ServiceZone = createSmartModel('ServiceZone', ServiceZoneMongoose, 'serviceZones');
+
 export default ServiceZone;

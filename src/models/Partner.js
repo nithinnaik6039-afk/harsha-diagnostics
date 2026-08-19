@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createSmartModel } from './smartModel.js';
 
 const PartnerSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -15,4 +16,7 @@ const PartnerSchema = new mongoose.Schema({
 
 PartnerSchema.index({ location: '2dsphere' });
 
-export default mongoose.model('Partner', PartnerSchema);
+const PartnerMongoose = mongoose.models.Partner || mongoose.model('Partner', PartnerSchema);
+const Partner = createSmartModel('Partner', PartnerMongoose, 'partners');
+
+export default Partner;
