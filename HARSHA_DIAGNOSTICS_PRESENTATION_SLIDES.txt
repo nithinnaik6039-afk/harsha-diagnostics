@@ -6,7 +6,7 @@
 --------------------------------------------------------------------------------
 SLIDE 1: TITLE & VISION
 --------------------------------------------------------------------------------
-[TITLE]
+
 HARSHA DIAGNOSTICS
 Next-Generation Hyper-Local Diagnostics & Home Sample Collection Platform
 
@@ -23,7 +23,7 @@ Harsha Diagnostics Engineering & Leadership Team
 --------------------------------------------------------------------------------
 SLIDE 2: THE PROBLEM STATEMENT
 --------------------------------------------------------------------------------
-[TITLE]
+
 The Friction in Modern Diagnostic Testing
 
 [KEY CHALLENGES]
@@ -44,7 +44,7 @@ The Friction in Modern Diagnostic Testing
 --------------------------------------------------------------------------------
 SLIDE 3: THE UNIFIED 3-APP SOLUTION
 --------------------------------------------------------------------------------
-[TITLE]
+
 Three Specialized Applications. One Synchronized Platform.
 
 [ECOSYSTEM PILLARS]
@@ -61,7 +61,7 @@ Three Specialized Applications. One Synchronized Platform.
 --------------------------------------------------------------------------------
 SLIDE 4: SYSTEM ARCHITECTURE & DATA FLOW
 --------------------------------------------------------------------------------
-[TITLE]
+
 High-Performance Real-Time Architecture
 
 [ARCHITECTURE COMPONENTS]
@@ -77,7 +77,7 @@ High-Performance Real-Time Architecture
 --------------------------------------------------------------------------------
 SLIDE 5: CUSTOMER MOBILE APP HIGHLIGHTS
 --------------------------------------------------------------------------------
-[TITLE]
+
 Customer App: Frictionless Healthcare at Doorsteps
 
 [STANDOUT CAPABILITIES]
@@ -91,7 +91,7 @@ Customer App: Frictionless Healthcare at Doorsteps
 --------------------------------------------------------------------------------
 SLIDE 6: MLT (PHLEBOTOMIST) APP HIGHLIGHTS
 --------------------------------------------------------------------------------
-[TITLE]
+
 MLT App: Empowering Field Technicians with Clinical Precision
 
 [OPERATIONAL TOOLS]
@@ -106,7 +106,7 @@ MLT App: Empowering Field Technicians with Clinical Precision
 --------------------------------------------------------------------------------
 SLIDE 7: ADMIN COMMAND CENTER HIGHLIGHTS
 --------------------------------------------------------------------------------
-[TITLE]
+
 Admin Command Center: Real-Time Laboratory Supervision
 
 [EXECUTIVE TOOLS]
@@ -120,7 +120,7 @@ Admin Command Center: Real-Time Laboratory Supervision
 --------------------------------------------------------------------------------
 SLIDE 8: CLINICAL QUALITY & NABL COMPLIANCE
 --------------------------------------------------------------------------------
-[TITLE]
+
 Clinical Safety, Quality Assurance & Data Privacy
 
 [SAFETY STANDARDS]
@@ -133,7 +133,7 @@ Clinical Safety, Quality Assurance & Data Privacy
 --------------------------------------------------------------------------------
 SLIDE 9: ANDROID APK GENERATION & DISTRIBUTION
 --------------------------------------------------------------------------------
-[TITLE]
+
 Standalone Android APK Generation Pipeline
 
 [BUILD ARCHITECTURE]
@@ -149,7 +149,7 @@ Standalone Android APK Generation Pipeline
 --------------------------------------------------------------------------------
 SLIDE 10: ROADMAP & FUTURE VISION
 --------------------------------------------------------------------------------
-[TITLE]
+
 Future Roadmap & Scaling Strategy
 
 [KEY MILESTONES]
@@ -161,7 +161,7 @@ Future Roadmap & Scaling Strategy
 --------------------------------------------------------------------------------
 SLIDE 11: CONCLUSION & LIVE DEMO
 --------------------------------------------------------------------------------
-[TITLE]
+
 Harsha Diagnostics — Transforming Doorstep Healthcare
 
 [SUMMARY]
