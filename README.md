@@ -120,3 +120,17 @@ Or build individually:
 
 ## 📜 License
 ISC © 2026 Harsha Diagnostics. All Rights Reserved.
+ ## 🌐 Live Project Links
+
+| Application                              | Live Demo                                  |
+| ---------------------------------------- | ------------------------------------------ |
+| 🏥 **Harsha Diagnostics — Main**         | https://harsha-diagnostics.vercel.app      |
+| 🩺 **Harsha Diagnostics — Deployment 2** | https://harsha-diagnostics-zlgx.vercel.app |
+| 👑 **Harsha Diagnostics — Deployment 3** | https://harsha-diagnostics-z5wl.vercel.app |
+
+### 🔗 Quick Access
+
+* 🏥 **Main Website:** https://harsha-diagnostics.vercel.app
+* 🩺 **Deployment 2:** https://harsha-diagnostics-zlgx.vercel.app
+* 👑 **Deployment 3:** https://harsha-diagnostics-z5wl.vercel.app
+
